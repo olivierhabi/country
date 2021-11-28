@@ -1,12 +1,33 @@
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
 import { Switch } from "@headlessui/react";
+import { useSession, getSession } from "next-auth/client";
 import { useTheme } from "next-themes";
+import { Menu, Transition } from "@headlessui/react";
+import { useRouter } from "next/router";
 
-const Home = () => {
-  const [enabled, setEnabled] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme()
+export async function getServerSideProps(context: any) {
+  const { req } = context;
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: { destination: "/login" },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
+
+const Home = (session: any): JSX.Element | null => {
+  const router = useRouter();
+  const [enabled, setEnabled] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(false);
+  const { theme, setTheme } = useTheme();
   useEffect(() => {
     setTheme("light");
     setMounted(true);
@@ -16,10 +37,10 @@ const Home = () => {
   return (
     <div className="flex flex-row h-screen">
       <div
-        className="bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400"
         style={{
-          width: "12%",
+          width: "180px",
         }}
+        className="flex-none bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400"
       >
         <div>
           <svg
@@ -40,7 +61,12 @@ const Home = () => {
             </defs>
           </svg>
         </div>
-        <div className="flex flex-col space-y-5 pt-10 text-xs font-book font-extrabold tracking-wide">
+        <div
+          style={{
+            fontSize: "12px",
+          }}
+          className="flex flex-col space-y-5 pt-10 font-book font-extrabold tracking-wide text-black dark:text-white"
+        >
           <div className="">MY LIST</div>
           <div className="">VISITED</div>
           <div className="">TO VISIT</div>
@@ -48,12 +74,22 @@ const Home = () => {
       </div>
       <div className="bg-white dark:bg-gray-800 flex-grow p-8">
         <div className="flex justify-between items-center h-10">
-          <div className="text-xl font-bold font-roman tracking-wide">
+          <div
+            className="text-black dark:text-white font-bold font-roman tracking-wide"
+            style={{
+              fontSize: "20px",
+            }}
+          >
             MY LIST
           </div>
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <div className="text-sm font-bold font-roman mr-2.5">
+              <div
+                className="text-black dark:text-white font-bold font-roman mr-2.5"
+                style={{
+                  fontSize: "14px",
+                }}
+              >
                 DARK MODE
               </div>
               <Switch
@@ -79,7 +115,7 @@ const Home = () => {
                 </span>
               </Switch>
             </div>
-            <div className="bg-gray-300 dark:bg-white h-8 w-8 rounded-full ml-11">
+            <div className="bg-gray-300 dark:bg-gray-100 h-8 w-8 rounded-full ml-11">
               <svg
                 className="mx-auto my-2"
                 width="14"
@@ -96,11 +132,12 @@ const Home = () => {
                 />
               </svg>
             </div>
-            <div className="flex items-center bg-red- pl-11">
-              <div className="font-bold font-roman">
-                <p className="text-gray-400 dark:text-gray-200 inline">Hey,</p> Jane
+            <div className="flex items-center pl-11">
+              <div className="text-black dark:text-white font-bold font-roman">
+                <p className="text-gray-400 dark:text-gray-200 inline">Hey,</p>{" "}
+                Jane
               </div>
-              <div className="h-10 w-10 border-2 border-black rounded-full relative ml-5">
+              <div className="h-10 w-10 border-2 border-black dark:border-gray-400 rounded-full relative ml-5">
                 <Image
                   src="/jpg/user_photo.jpg"
                   alt="Picture of the user"
@@ -112,7 +149,151 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div>Search Form</div>
+        <div className="flex flex-row justify-between mt-7 w-full">
+          <div
+            className=""
+            style={{
+              width: "400px",
+            }}
+          >
+            <div className="relative rounded-xl shadow-sm">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="fill-current text-black dark:text-white h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M15.18 16.594A9.001 9.001 0 013.198 3.198 9 9 0 0116.594 15.18l6.874 6.874a1 1 0 01-1.414 1.415l-6.874-6.875zM4.612 14.512a7 7 0 119.9 0l-.006.006a7 7 0 01-9.894-.006z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                style={{
+                  height: "50px",
+                  fontSize: "18px",
+                }}
+                type="text"
+                name="search"
+                id="search"
+                className="pl-14 font-roman text-black dark:text-white bg-gray-100 dark:bg-gray-600 block w-full sm:text-sm rounded-xl focus:outline-none placeholder-black dark:placeholder-white"
+                placeholder="Search For a Country ...."
+              />
+            </div>
+          </div>
+          <div className="">
+            <Menu as="div" className="relative inline-block text-left">
+              <div>
+                <Menu.Button
+                  style={{
+                    width: "200px",
+                    height: "50px",
+                    fontSize: "18px",
+                  }}
+                  className="inline-flex justify-center items-center w-full px-4 py-2 font-roman bg-gray-100 dark:bg-gray-600 text-black dark:text-white rounded-xl  focus:outline-none focus-visible:ring-2"
+                >
+                  Filter by region
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 ml-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </Menu.Button>
+              </div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items
+                  style={{
+                    width: "200px",
+                  }}
+                  className="absolute right-0 mt-2 origin-top-right bg-gray-100 divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                >
+                  <div
+                    className="flex flex-col space-y-2 py-5 px-4 font-roman"
+                    style={{
+                      fontSize: "18px",
+                    }}
+                  >
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`cursor-pointer rounded-xl h-10 ${
+                            active ? "bg-gray-200" : null
+                          }`}
+                        >
+                          Africa
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`cursor-pointer rounded-xl h-10 ${
+                            active ? "bg-gray-200" : null
+                          }`}
+                        >
+                          America
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`cursor-pointer rounded-xl h-10 ${
+                            active ? "bg-gray-200" : null
+                          }`}
+                        >
+                          Asia
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`cursor-pointer rounded-xl h-10 ${
+                            active ? "bg-gray-200" : null
+                          }`}
+                        >
+                          Europe
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`cursor-pointer rounded-xl h-10 ${
+                            active ? "bg-gray-200" : null
+                          }`}
+                        >
+                          Oceania
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          </div>
+        </div>
       </div>
     </div>
   );

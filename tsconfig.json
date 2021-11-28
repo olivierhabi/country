@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "pages/api/auth/[...nextauth].ts", "pages/login.tsx", "src/components/commons/Buttons.tsx", "src/middleware/init-middleware.ts", "src/middleware/validate-middleware.ts", "src/helpers/bcrypt.ts"  ],
   "exclude": [
     "node_modules"
   ]
