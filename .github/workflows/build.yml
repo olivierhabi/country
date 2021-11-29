@@ -15,7 +15,7 @@ jobs:
     - name: Tests
       run: yarn test:ci
     - name: Generating coverage badges
-      uses: jpb06/jest-badges-action@lates
+      uses: jpb06/jest-badges-action@latest
       with:
         branch: develop
 
