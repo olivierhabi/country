@@ -1,2 +1,6 @@
 [![Nextjs Test & Build](https://github.com/olivierhabi/country/actions/workflows/build.yml/badge.svg)](https://github.com/olivierhabi/country/actions/workflows/build.yml)
-![test coverage](https://img.shields.io/badge/Coverage-44%25-F2C572.svg?prefix=$coverage$)
+![coverage-branches](https://github.com/olivierhabi/country/blob/develop/badges/coverage-branches.svg)
+![coverage-functions](https://github.com/olivierhabi/country/blob/develop/badges/coverage-functions.svg)
+![coverage-global coverage](https://github.com/olivierhabi/country/blob/develop/badges/coverage-global%20coverage.svg)
+![coverage-lines](https://github.com/olivierhabi/country/blob/develop/badges/coverage-lines.svg)
+![coverage-statements](https://github.com/olivierhabi/country/blob/develop/badges/coverage-statements.svg)
