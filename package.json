@@ -10,6 +10,7 @@
     "seed": "prisma db seed --preview-feature",
     "generate": "prisma generate",
     "test": "jest --coverage",
+    "test:ci": "jest --ci --runInBand --coverage",
     "coverage:badge": "coverage-badge-creator"
   },
   "dependencies": {
