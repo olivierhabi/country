@@ -22,6 +22,9 @@ export type FormValues = {
   password: string;
   emailAddress: string;
 };
+export type FormSearch = {
+  searchInput: string | null;
+};
 
 export interface NewUserResponse {
   id: number;

@@ -5,6 +5,11 @@ import { useSession, getSession } from "next-auth/client";
 import { useTheme } from "next-themes";
 import { Menu, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import Cards from "../src/components/cards/index";
+import { InputSearch } from "../src/components/commons/InputSearch";
+import { Validations } from "../src/components/utils/formValidation";
+import { FormSearch } from "../src/types";
 
 export async function getServerSideProps(context: any) {
   const { req } = context;
@@ -27,15 +32,72 @@ const Home = (session: any): JSX.Element | null => {
   const router = useRouter();
   const [enabled, setEnabled] = useState<boolean>(true);
   const [mounted, setMounted] = useState<boolean>(false);
+  const [countries, setCountry] = useState<any>([]);
+  const [loading, setLoading] = useState<any>(true);
   const { theme, setTheme } = useTheme();
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+  } = useForm<FormSearch>();
+
   useEffect(() => {
     setTheme("light");
     setMounted(true);
+    (async () => {
+      setLoading(true);
+      const res = await fetch(`${process.env.COUNTRIES_API}/all`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      setCountry(data);
+      setLoading(false);
+    })();
   }, []);
   if (!mounted) return null;
 
+  const firterSelection = async (selection: string) => {
+    setLoading(true);
+    setCountry([]);
+    const res = await fetch(
+      `${process.env.COUNTRIES_API}/region/${selection}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    setCountry(data);
+    setLoading(false);
+  };
+
+  const searchInput = async (input: any) => {
+    setLoading(true);
+    setCountry([]);
+    const res = await fetch(
+      `${process.env.COUNTRIES_API}/name/${input.searchInput}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    setCountry(data);
+    setLoading(false);
+  };
+
   return (
-    <div className="flex flex-row h-screen">
+    <div className="flex flex-row h-full">
       <div
         style={{
           width: "180px",
@@ -90,7 +152,7 @@ const Home = (session: any): JSX.Element | null => {
                   fontSize: "14px",
                 }}
               >
-                DARK MODE
+                {!enabled ? "LIGHT MODE" : "DARK MODE"}
               </div>
               <Switch
                 checked={enabled}
@@ -156,33 +218,15 @@ const Home = (session: any): JSX.Element | null => {
               width: "400px",
             }}
           >
-            <div className="relative rounded-xl shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="fill-current text-black dark:text-white h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M15.18 16.594A9.001 9.001 0 013.198 3.198 9 9 0 0116.594 15.18l6.874 6.874a1 1 0 01-1.414 1.415l-6.874-6.875zM4.612 14.512a7 7 0 119.9 0l-.006.006a7 7 0 01-9.894-.006z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              <input
-                style={{
-                  height: "50px",
-                  fontSize: "18px",
-                }}
-                type="text"
-                name="search"
-                id="search"
-                className="pl-14 font-roman text-black dark:text-white bg-gray-100 dark:bg-gray-600 block w-full sm:text-sm rounded-xl focus:outline-none placeholder-black dark:placeholder-white"
+            <form onSubmit={handleSubmit(searchInput)}>
+              <InputSearch
+                label={"Search here"}
+                type={"text"}
+                {...register("searchInput", Validations.searchInput)}
+                errorText={errors.searchInput?.message}
                 placeholder="Search For a Country ...."
               />
-            </div>
+            </form>
           </div>
           <div className="">
             <Menu as="div" className="relative inline-block text-left">
@@ -225,7 +269,7 @@ const Home = (session: any): JSX.Element | null => {
                   style={{
                     width: "200px",
                   }}
-                  className="absolute right-0 mt-2 origin-top-right bg-gray-100 divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  className="absolute right-0 mt-2 origin-top-right bg-gray-100 dark:bg-gray-600 divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                 >
                   <div
                     className="flex flex-col space-y-2 py-5 px-4 font-roman"
@@ -236,6 +280,7 @@ const Home = (session: any): JSX.Element | null => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() => firterSelection("africa")}
                           className={`cursor-pointer rounded-xl h-10 ${
                             active ? "bg-gray-200" : null
                           }`}
@@ -247,6 +292,7 @@ const Home = (session: any): JSX.Element | null => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() => firterSelection("america")}
                           className={`cursor-pointer rounded-xl h-10 ${
                             active ? "bg-gray-200" : null
                           }`}
@@ -258,6 +304,7 @@ const Home = (session: any): JSX.Element | null => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() => firterSelection("asia")}
                           className={`cursor-pointer rounded-xl h-10 ${
                             active ? "bg-gray-200" : null
                           }`}
@@ -269,6 +316,7 @@ const Home = (session: any): JSX.Element | null => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() => firterSelection("europe")}
                           className={`cursor-pointer rounded-xl h-10 ${
                             active ? "bg-gray-200" : null
                           }`}
@@ -280,6 +328,7 @@ const Home = (session: any): JSX.Element | null => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() => firterSelection("oceania")}
                           className={`cursor-pointer rounded-xl h-10 ${
                             active ? "bg-gray-200" : null
                           }`}
@@ -293,6 +342,9 @@ const Home = (session: any): JSX.Element | null => {
               </Transition>
             </Menu>
           </div>
+        </div>
+        <div className="">
+          <Cards loading={loading} countries={countries} />
         </div>
       </div>
     </div>
