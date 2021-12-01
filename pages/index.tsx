@@ -1,6 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
 import { Switch } from "@headlessui/react";
+import { useSession, getSession } from "next-auth/client";
 import { useTheme } from "next-themes";
 import { Menu, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
