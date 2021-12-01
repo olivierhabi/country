@@ -1,6 +1,13 @@
 const EMAIL_REGEX_PATTERN = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
 export const Validations = {
+  searchInput: {
+    required: { value: true, message: "Enter search input" },
+    minLength: {
+      value: 1,
+      message: "You must emter atleast one character",
+    },
+  },
   password: {
     required: { value: true, message: "Enter a password" },
     minLength: {

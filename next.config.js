@@ -1,6 +1,6 @@
-// module.exports = {
-//   experimental: {
-//     concurrentFeatures: true,
-//     serverComponents: true,
-//   },
-// };
+module.exports = {
+    images: {
+      domains: ["flagcdn.com", "upload.wikimedia.org"],
+    },
+  };
+  
