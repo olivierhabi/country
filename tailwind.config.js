@@ -7,7 +7,13 @@ module.exports = {
       roman: ['"Avenir Roman"'],
       book: ['"Avenir Book"'],
     },
-    extend: {},
+    extend: {
+      colors: {
+        green: {
+          default: "#14C704",
+        },
+      },
+    },
   },
   variants: {
     extend: {},

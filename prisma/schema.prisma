@@ -65,3 +65,10 @@ model VerificationRequest {
 
   @@map(name: "verification_requests")
 }
+
+model List {
+  id        Int      @id @default(autoincrement())
+  country   Json
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+}

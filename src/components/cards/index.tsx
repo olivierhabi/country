@@ -3,12 +3,36 @@ import { Fragment, useState, useEffect } from "react";
 import LoadingSkeleton from "./LoadingSkeleton";
 
 const Index = (props: any) => {
-  if (props.loading || (props.countries && props.countries.length === 0)) {
+  if (props.loading && props.countries && props.countries.length === 0) {
     return <LoadingSkeleton />;
+  }
+  if (!props.loading && props.countries && props.countries.length === 0) {
+    return <div>Please add Country!</div>;
   }
   if (props.countries.status === 404) {
     return <div>Search not Found Try another one!</div>;
   }
+  const addToList = async (country: Array<string>) => {
+    const res = await fetch(`/api/list`, {
+      method: "POST",
+      body: JSON.stringify(country),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (data.status === "success")
+      props.setCca2list((prevState: Array<string>) => [
+        data.data.country.cca2,
+        ...prevState,
+      ]);
+  };
+  const foundOnMyList = (country: string) => {
+    const find =
+      props.cca2list &&
+      props.cca2list.find((element: string) => element === country);
+    return find;
+  };
   return (
     <>
       <div className="container mt-8 mx-auto px-4 md:px-12">
@@ -113,28 +137,49 @@ const Index = (props: any) => {
                             ></path>
                           </svg>
                         </button>
-                        <button
-                          style={{
-                            backgroundColor: "#14C704",
-                          }}
-                          className="h-10 w-10 rounded-full ml-5"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="12"
-                            className="mx-auto"
-                            fill="none"
-                            viewBox="0 0 18 12"
+                        {foundOnMyList(country.cca2) ? (
+                          <button
+                            disabled={true}
+                            className="h-10 w-10 rounded-full ml-5 bg-green-default"
                           >
-                            <path
-                              fill="#fff"
-                              fillRule="evenodd"
-                              d="M17.04.626a1 1 0 010 1.414l-9.333 9.334a1 1 0 01-1.414 0L.96 6.04a1 1 0 011.414-1.414L7 9.252 15.626.626a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            ></path>
-                          </svg>
-                        </button>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="18"
+                              height="12"
+                              className="mx-auto"
+                              fill="none"
+                              viewBox="0 0 18 12"
+                            >
+                              <path
+                                fill="#fff"
+                                fillRule="evenodd"
+                                d="M17.04.626a1 1 0 010 1.414l-9.333 9.334a1 1 0 01-1.414 0L.96 6.04a1 1 0 011.414-1.414L7 9.252 15.626.626a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              ></path>
+                            </svg>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => addToList(country)}
+                            className="h-10 w-10 rounded-full ml-5 bg-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="18"
+                              height="12"
+                              className="mx-auto"
+                              fill="none"
+                              viewBox="0 0 18 12"
+                            >
+                              <path
+                                fill="#fff"
+                                fillRule="evenodd"
+                                d="M17.04.626a1 1 0 010 1.414l-9.333 9.334a1 1 0 01-1.414 0L.96 6.04a1 1 0 011.414-1.414L7 9.252 15.626.626a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              ></path>
+                            </svg>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
