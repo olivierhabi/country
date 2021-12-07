@@ -39,6 +39,7 @@ export enum ListViewSteps {
 
 const Home = (): JSX.Element | null => {
   const router = useRouter();
+  const [state, dispatch] = useStore();
   const [enabled, setEnabled] = useState<boolean>(true);
   const [mounted, setMounted] = useState<boolean>(false);
   const [countries, setCountry] = useState<any>([]);
@@ -47,7 +48,7 @@ const Home = (): JSX.Element | null => {
   const [loading, setLoading] = useState<any>(false);
   const { theme, setTheme } = useTheme();
   const [selected, setSelected] = useState();
-  const [state, dispatch] = useStore();
+ 
 
   const {
     register,

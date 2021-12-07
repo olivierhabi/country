@@ -12,7 +12,6 @@ const handler = nextConnect()
   //     await updateModuleById(req, res);
   // })
   .delete(async (req: NextApiRequest, res: NextApiResponse) => {
-    console.log("========================================================")
     await deleteFromList(req, res);
     // await deleteModuleById(req, res);
   });

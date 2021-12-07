@@ -3,19 +3,19 @@ import "tailwindcss/tailwind.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "next-themes";
 import { Provider as AuthProvider } from "next-auth/client";
-import Provide from "../src/contexts/provider";
+import Provider from "../src/contexts/provider";
 
 import type { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provide>
+    <Provider>
       <AuthProvider session={pageProps.session}>
         <ThemeProvider attribute="class">
           <Component {...pageProps} />
         </ThemeProvider>
       </AuthProvider>
-    </Provide>
+    </Provider>
   );
 }
 

@@ -3,7 +3,6 @@ import formatPopulation from "../helpers/formatPopulation"
 
 
 const SingleCountry = (props: any) => {
-  console.log(props.selected.borders, "=================== PROPS");
   return (
     <div className="flex flex-row  mt-7">
       <div className="w-[50%] h-[100vh]">

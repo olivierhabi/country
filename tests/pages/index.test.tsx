@@ -1,12 +1,24 @@
-import { render, screen } from '@testing-library/react';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import Provider from "../../src/contexts/provider";
+import Index from "../../pages/index";
 
-import Index from '../../pages/index';
+export enum ListViewSteps {
+  LIST,
+  SINGLE,
+}
 
-describe('Should render the app without crashing', () => {
-  it('Renders the Dashboard page', () => {
-    render(<Index />);
+const UserContext = React.createContext(ListViewSteps.LIST);
+
+describe("Should render the app without crashing", () => {
+  it("Renders the Dashboard page", () => {
+    render(
+      <Provider>
+        <Index />
+      </Provider>
+    );
     expect(
-      screen.getByRole('button', { name: 'Filter by region' })
+      screen.getByRole("button", { name: "Filter by region" })
     ).toBeInTheDocument();
   });
 });

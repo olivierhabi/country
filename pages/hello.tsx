@@ -20,7 +20,6 @@ export default function App() {
       type: TOLIST,
     });
   }
-  console.log(state, "-=-=-=-=-=-=-=-=-=-=-=-=-=-");
   return (
     <>
       {state === ListViewSteps.LIST && <div>THIS ID LIST</div>}

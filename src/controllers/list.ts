@@ -37,7 +37,6 @@ export const getCreatedList = async (
     const myList: Array<string> = [];
     if (countries.length !== 0) {
       for (var i = 0; i < countries.length; i++) {
-        console.log(typeof countries[i].country);
         myList.push(countries[i].country.cca2);
       }
     }
