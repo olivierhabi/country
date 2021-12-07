@@ -1,5 +1,6 @@
 module.exports = {
-  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+  mode: "jit",
+  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     fontFamily: {
@@ -7,7 +8,13 @@ module.exports = {
       roman: ['"Avenir Roman"'],
       book: ['"Avenir Book"'],
     },
-    extend: {},
+    extend: {
+      colors: {
+        green: {
+          default: "#14C704",
+        },
+      },
+    },
   },
   variants: {
     extend: {},

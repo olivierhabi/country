@@ -17,7 +17,7 @@ const Input = React.forwardRef<
       {label && (
         <>
           <div className="flex flex-col">
-            <label className="mb-2 font-semibold text-base text-black-default">
+            <label className="mb-2 font-semibold text-base text-black">
               <div className="inputField">
                 <div className="pb-2">{label}</div>
                 <input

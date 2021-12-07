@@ -1,37 +1,106 @@
+import React, { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
-import { Fragment, useState, useEffect } from "react";
 import LoadingSkeleton from "./LoadingSkeleton";
+import { ToastContainer, toast } from "react-toastify";
+import formatPopulation from "../../helpers/formatPopulation";
 
 const Index = (props: any) => {
-  if (props.loading || (props.countries && props.countries.length === 0)) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  if (props.loading && props.countries && props.countries.length === 0) {
     return <LoadingSkeleton />;
+  }
+  if (!props.loading && props.countries && props.countries.length === 0) {
+    return <div>Please add Country!</div>;
   }
   if (props.countries.status === 404) {
     return <div>Search not Found Try another one!</div>;
   }
+
+  const updateDataList = async () => {
+    const { data } = await props.listData();
+    props.setList(data);
+  };
+
+  const addToList = async (country: Array<string>) => {
+    const res = await fetch(`/api/list`, {
+      method: "POST",
+      body: JSON.stringify(country),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const dataResp = await res.json();
+    if (dataResp.status === "success")
+      props.setCca2list((prevState: Array<string>) => [
+        dataResp.data.country.cca2,
+        ...prevState,
+      ]);
+    await updateDataList();
+  };
+  const foundOnMyList = (country: string) => {
+    const find =
+      props.cca2list &&
+      props.cca2list.find((element: string) => element === country);
+    return find;
+  };
+
+  const deleteOnTheList = async (country: string) => {
+    const find =
+      props.myList &&
+      props.myList.find((element: any) => element.country.cca2 === country);
+    if (find) {
+      const res = await fetch(`/api/list/${find.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const dataResp = await res.json();
+      if (dataResp.status === "200")
+        props.setCca2list((prevState: Array<string>) =>
+          prevState.filter((i: string) => i !== country)
+        );
+      await updateDataList();
+    }
+  };
+
+  const onDelete = (e: React.SyntheticEvent, country: any) => {
+    e.stopPropagation();
+    setIsLoading(true);
+    deleteOnTheList(country.cca2);
+  };
+  const onAddList = (e: React.SyntheticEvent, country: any) => {
+    e.stopPropagation();
+    addToList(country);
+  };
   return (
     <>
       <div className="container mt-8 mx-auto px-4 md:px-12">
         <div className="flex flex-wrap -mx-1 lg:-mx-4">
           {props.countries &&
             props.countries.map((country: any) => {
-              function numFormatter(num: number) {
-                if (num >= 1000000000) {
-                  return (num / 1000000000).toFixed(1) + " billion";
-                } else if (num >= 1000000) {
-                  return (num / 1000000).toFixed(1) + " million";
-                } else if (num >= 1000) {
-                  return (num / 1000).toFixed(1) + " thousands";
-                } else if (num < 1000) {
-                  return num.toFixed(1) + " hundred";
-                } else {
-                  return num;
-                }
-              }
+              // function numFormatter(num: number) {
+              //   if (num >= 1000000000) {
+              //     return (num / 1000000000).toFixed(1) + " billion";
+              //   } else if (num >= 1000000) {
+              //     return (num / 1000000).toFixed(1) + " million";
+              //   } else if (num >= 1000) {
+              //     return (num / 1000).toFixed(1) + " thousands";
+              //   } else if (num < 1000) {
+              //     return num.toFixed(1) + " hundred";
+              //   } else {
+              //     return num;
+              //   }
+              // }
               return (
                 <div
                   key={country.name.common}
-                  className="w-full md:w-1/2 lg:w-60 bg-gray-100 dark:bg-gray-700 rounded-xl mr-10 mb-7"
+                  onClick={() => {
+                    props.setSelected(country);
+                    props.toSingle();
+                  }}
+                  className="cursor-pointer w-full md:w-1/2 lg:w-60 bg-gray-100 dark:bg-gray-700 rounded-xl mr-10 mb-7"
                 >
                   <div className="flex flex-col justify-between rounded-xl shadow-lg">
                     <div
@@ -72,7 +141,7 @@ const Index = (props: any) => {
                           }}
                         >
                           <div>
-                            Population: {numFormatter(country.population)}
+                            Population: {formatPopulation(country.population)}
                           </div>
                           <div>Capital : {country.capital}</div>
                           <div>
@@ -92,7 +161,11 @@ const Index = (props: any) => {
                         </div>
                       </div>
                       <div className="flex justify-end m-2.5">
-                        <button className="bg-gray-300 h-10 w-10 rounded-full">
+                        <button
+                          disabled={!foundOnMyList(country.cca2)}
+                          onClick={(e) => onDelete(e, country)}
+                          className="bg-gray-300 h-10 w-10 rounded-full"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -113,28 +186,49 @@ const Index = (props: any) => {
                             ></path>
                           </svg>
                         </button>
-                        <button
-                          style={{
-                            backgroundColor: "#14C704",
-                          }}
-                          className="h-10 w-10 rounded-full ml-5"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="12"
-                            className="mx-auto"
-                            fill="none"
-                            viewBox="0 0 18 12"
+                        {foundOnMyList(country.cca2) ? (
+                          <button
+                            disabled={true}
+                            className="h-10 w-10 rounded-full ml-5 bg-green-default"
                           >
-                            <path
-                              fill="#fff"
-                              fillRule="evenodd"
-                              d="M17.04.626a1 1 0 010 1.414l-9.333 9.334a1 1 0 01-1.414 0L.96 6.04a1 1 0 011.414-1.414L7 9.252 15.626.626a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            ></path>
-                          </svg>
-                        </button>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="18"
+                              height="12"
+                              className="mx-auto"
+                              fill="none"
+                              viewBox="0 0 18 12"
+                            >
+                              <path
+                                fill="#fff"
+                                fillRule="evenodd"
+                                d="M17.04.626a1 1 0 010 1.414l-9.333 9.334a1 1 0 01-1.414 0L.96 6.04a1 1 0 011.414-1.414L7 9.252 15.626.626a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              ></path>
+                            </svg>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={(e) => onAddList(e, country)}
+                            className="h-10 w-10 rounded-full ml-5 bg-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="18"
+                              height="12"
+                              className="mx-auto"
+                              fill="none"
+                              viewBox="0 0 18 12"
+                            >
+                              <path
+                                fill="#fff"
+                                fillRule="evenodd"
+                                d="M17.04.626a1 1 0 010 1.414l-9.333 9.334a1 1 0 01-1.414 0L.96 6.04a1 1 0 011.414-1.414L7 9.252 15.626.626a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              ></path>
+                            </svg>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -143,6 +237,17 @@ const Index = (props: any) => {
             })}
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };

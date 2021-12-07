@@ -36,7 +36,18 @@ export const createNewUser = async (newUser: NewUser<NewUserResponse>) => {
         email: true,
       },
     });
-    console.log(data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createList = async (country: object) => {
+  try {
+    const data = await prisma.list.create({
+      data: {
+        country: country,
+      },
+    });
     return data;
   } catch (error) {
     throw error;
