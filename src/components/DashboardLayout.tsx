@@ -20,13 +20,12 @@ interface AuxProps {
   title: string;
 }
 
-const DashboardLayout = ({
-  children,
-  title,
-  ListViewSteps,
-  listStep,
-  setListStep,
-}: any) => {
+export enum ListViewSteps {
+  LIST,
+  SINGLE,
+}
+
+const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const { theme, setTheme } = useTheme();
 
@@ -41,7 +40,6 @@ const DashboardLayout = ({
   useEffect(() => {
     setTheme("light");
   }, []);
-
   return (
     <div className="flex flex-row h-full">
       <div className="flex-none w-[180px] bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400">
@@ -78,13 +76,13 @@ const DashboardLayout = ({
       </div>
       <div className="bg-white dark:bg-gray-800 flex-grow p-8">
         <div className="flex justify-between items-center h-10">
-          {listStep === ListViewSteps.LIST && (
+          {state === ListViewSteps.LIST && (
             <div className="text-black text-[20px] dark:text-white font-bold font-roman tracking-wide">
               {title}
             </div>
           )}
-          {listStep !== ListViewSteps.LIST && (
-            <BackButton onClick={() => setListStep(ListViewSteps.LIST)} />
+          {state !== ListViewSteps.LIST && (
+            <BackButton onClick={toList} />
           )}
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">

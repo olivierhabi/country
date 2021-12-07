@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
 import LoadingSkeleton from "./LoadingSkeleton";
 import { ToastContainer, toast } from "react-toastify";
-import formatPopulation from "../../helpers/formatPopulation"
+import formatPopulation from "../../helpers/formatPopulation";
 
 const Index = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -97,8 +97,9 @@ const Index = (props: any) => {
                 <div
                   key={country.name.common}
                   onClick={() => {
-                    props.setSelected(country)
-                    props.setListStep(props.ListViewSteps.SINGLE)}}
+                    props.setSelected(country);
+                    props.toSingle();
+                  }}
                   className="cursor-pointer w-full md:w-1/2 lg:w-60 bg-gray-100 dark:bg-gray-700 rounded-xl mr-10 mb-7"
                 >
                   <div className="flex flex-col justify-between rounded-xl shadow-lg">

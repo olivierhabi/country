@@ -12,6 +12,8 @@ import { Validations } from "../src/components/utils/formValidation";
 import { FormSearch } from "../src/types";
 import DashboardLayout from "../src/components/DashboardLayout";
 import SingleCountry from "../src/components/SingleCountry";
+import { useStore } from "../src/contexts/hooks";
+import { TOSINGLE, TOLIST } from "../src/contexts/constants";
 
 export async function getServerSideProps(context: any) {
   const { req } = context;
@@ -44,190 +46,8 @@ const Home = (): JSX.Element | null => {
   const [cca2list, setCca2list] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const { theme, setTheme } = useTheme();
-  const [listStep, setListStep] = useState(ListViewSteps.SINGLE);
-  const [selected, setSelected] = useState({
-    car: {
-      side: "right",
-      signs: ["PY"],
-    },
-    idd: {
-      root: "+5",
-      suffixes: ["95"],
-    },
-    tld: [".py"],
-    area: 406752,
-    cca2: "PY",
-    cca3: "PRY",
-    ccn3: "600",
-    cioc: "PAR",
-    fifa: "PAR",
-    flag: "🇵🇾",
-    gini: {
-      "2019": 45.7,
-    },
-    maps: {
-      googleMaps: "https://goo.gl/maps/JtnqG73WJn1Gx6mz6",
-      openStreetMaps: "https://www.openstreetmap.org/relation/287077",
-    },
-    name: {
-      common: "Paraguay",
-      official: "Republic of Paraguay",
-      nativeName: {
-        grn: {
-          common: "Paraguái",
-          official: "Tetã Paraguái",
-        },
-        spa: {
-          common: "Paraguay",
-          official: "República de Paraguay",
-        },
-      },
-    },
-    flags: {
-      png: "https://flagcdn.com/w320/py.png",
-      svg: "https://flagcdn.com/py.svg",
-    },
-    latlng: [-23, -58],
-    region: "Americas",
-    status: "officially-assigned",
-    borders: ["ARG", "BOL", "BRA"],
-    capital: ["Asunción"],
-    demonyms: {
-      eng: {
-        f: "Paraguayan",
-        m: "Paraguayan",
-      },
-      fra: {
-        f: "Paraguayenne",
-        m: "Paraguayen",
-      },
-    },
-    unMember: true,
-    languages: {
-      grn: "Guaraní",
-      spa: "Spanish",
-    },
-    subregion: "South America",
-    timezones: ["UTC-04:00"],
-    coatOfArms: {
-      png: "https://mainfacts.com/media/images/coats_of_arms/py.png",
-      svg: "https://mainfacts.com/media/images/coats_of_arms/py.svg",
-    },
-    continents: ["South America"],
-    currencies: {
-      PYG: {
-        name: "Paraguayan guaraní",
-        symbol: "₲",
-      },
-    },
-    landlocked: true,
-    population: 7132530,
-    postalCode: {
-      regex: "^(\\d{4})$",
-      format: "####",
-    },
-    capitalInfo: {
-      latlng: [-25.28, -57.57],
-    },
-    independent: true,
-    startOfWeek: "monday",
-    altSpellings: [
-      "PY",
-      "Republic of Paraguay",
-      "República del Paraguay",
-      "Tetã Paraguái",
-    ],
-    translations: {
-      ara: {
-        common: "باراغواي",
-        official: "جمهورية باراغواي",
-      },
-      ces: {
-        common: "Paraguay",
-        official: "Paraguayská republika",
-      },
-      cym: {
-        common: "Paraguay",
-        official: "Republic of Paraguay",
-      },
-      deu: {
-        common: "Paraguay",
-        official: "Republik Paraguay",
-      },
-      est: {
-        common: "Paraguay",
-        official: "Paraguay Vabariik",
-      },
-      fin: {
-        common: "Paraguay",
-        official: "Paraguayn tasavalta",
-      },
-      fra: {
-        common: "Paraguay",
-        official: "République du Paraguay",
-      },
-      hrv: {
-        common: "Paragvaj",
-        official: "Republika Paragvaj",
-      },
-      hun: {
-        common: "Paraguay",
-        official: "Paraguayi Köztársaság",
-      },
-      ita: {
-        common: "Paraguay",
-        official: "Repubblica del Paraguay",
-      },
-      jpn: {
-        common: "パラグアイ",
-        official: "パラグアイ共和国",
-      },
-      kor: {
-        common: "파라과이",
-        official: "파라과이 공화국",
-      },
-      nld: {
-        common: "Paraguay",
-        official: "Republiek Paraguay",
-      },
-      per: {
-        common: "پاراگوئه",
-        official: "جمهوری پاراگوئه",
-      },
-      pol: {
-        common: "Paragwaj",
-        official: "Republika Paragwaju",
-      },
-      por: {
-        common: "Paraguai",
-        official: "República do Paraguai",
-      },
-      rus: {
-        common: "Парагвай",
-        official: "Республика Парагвай",
-      },
-      slk: {
-        common: "Paraguaj",
-        official: "Paraguajská republika",
-      },
-      spa: {
-        common: "Paraguay",
-        official: "República de Paraguay",
-      },
-      swe: {
-        common: "Paraguay",
-        official: "Republiken Paraguay",
-      },
-      urd: {
-        common: "پیراگوئے",
-        official: "جمہوریہ پیراگوئے",
-      },
-      zho: {
-        common: "巴拉圭",
-        official: "巴拉圭共和国",
-      },
-    },
-  });
+  const [selected, setSelected] = useState();
+  const [state, dispatch] = useStore();
 
   const {
     register,
@@ -301,23 +121,27 @@ const Home = (): JSX.Element | null => {
     setCountry(data);
     setLoading(false);
   };
-  // console.log(
-  //   listStep,
-  //   ListViewSteps.LIST,
-  //   "_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_=-=-=-=-+_+_++"
-  // );
+  function toSingle() {
+    dispatch({
+      type: TOSINGLE,
+    });
+  }
 
-  // console.log(selected && selected.name.common, "============================ SELECYTED")
+  function toList() {
+    dispatch({
+      type: TOLIST,
+    });
+  }
 
   return (
     <>
       <DashboardLayout
-        ListViewSteps={ListViewSteps}
-        setListStep={setListStep}
-        listStep={listStep}
+        state={state}
+        toSingle={toSingle}
+        toList={toList}
         title={"MY LIST"}
       >
-        {listStep === ListViewSteps.LIST && (
+        {state === ListViewSteps.LIST && (
           <div className="flex flex-row justify-between mt-7 w-full">
             <div className="w-[400px]">
               <form onSubmit={handleSubmit(searchInput)}>
@@ -431,7 +255,7 @@ const Home = (): JSX.Element | null => {
         )}
 
         <>
-          {listStep === ListViewSteps.LIST && (
+          {state === ListViewSteps.LIST && (
             <Cards
               setCca2list={setCca2list}
               cca2list={cca2list}
@@ -441,12 +265,12 @@ const Home = (): JSX.Element | null => {
               countries={countries}
               listData={listData}
               ListViewSteps={ListViewSteps}
-              setListStep={setListStep}
-              listStep={listStep}
+              toSingle={toSingle}
+              toList={toList}
               setSelected={setSelected}
             />
           )}
-          {listStep === ListViewSteps.SINGLE && (
+          {state === ListViewSteps.SINGLE && (
             <SingleCountry selected={selected} />
           )}
         </>

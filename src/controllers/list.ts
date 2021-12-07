@@ -61,14 +61,14 @@ export const deleteFromList = async (
   try {
     const { id } = req.query;
 
-    const country = await getCountryById(id);
+    const country = await getCountryById(Number(id));
     if (!country) {
       return res.status(404).json({
         status: "404",
         message: "Country not Found on the List",
       });
     }
-    const moduleDelete = await deleteCountry(id);
+    const moduleDelete = await deleteCountry(Number(id));
     if (moduleDelete) {
       return res.status(200).json({
         status: "200",
