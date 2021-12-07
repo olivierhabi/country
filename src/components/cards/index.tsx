@@ -1,8 +1,12 @@
+import React, { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
-import { Fragment, useState, useEffect } from "react";
 import LoadingSkeleton from "./LoadingSkeleton";
+import { ToastContainer, toast } from "react-toastify";
+import formatPopulation from "../../helpers/formatPopulation"
 
 const Index = (props: any) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   if (props.loading && props.countries && props.countries.length === 0) {
     return <LoadingSkeleton />;
   }
@@ -12,6 +16,12 @@ const Index = (props: any) => {
   if (props.countries.status === 404) {
     return <div>Search not Found Try another one!</div>;
   }
+
+  const updateDataList = async () => {
+    const { data } = await props.listData();
+    props.setList(data);
+  };
+
   const addToList = async (country: Array<string>) => {
     const res = await fetch(`/api/list`, {
       method: "POST",
@@ -20,12 +30,13 @@ const Index = (props: any) => {
         "Content-Type": "application/json",
       },
     });
-    const data = await res.json();
-    if (data.status === "success")
+    const dataResp = await res.json();
+    if (dataResp.status === "success")
       props.setCca2list((prevState: Array<string>) => [
-        data.data.country.cca2,
+        dataResp.data.country.cca2,
         ...prevState,
       ]);
+    await updateDataList();
   };
   const foundOnMyList = (country: string) => {
     const find =
@@ -33,29 +44,62 @@ const Index = (props: any) => {
       props.cca2list.find((element: string) => element === country);
     return find;
   };
+
+  const deleteOnTheList = async (country: string) => {
+    const find =
+      props.myList &&
+      props.myList.find((element: any) => element.country.cca2 === country);
+    if (find) {
+      const res = await fetch(`/api/list/${find.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const dataResp = await res.json();
+      if (dataResp.status === "200")
+        props.setCca2list((prevState: Array<string>) =>
+          prevState.filter((i: string) => i !== country)
+        );
+      await updateDataList();
+    }
+  };
+
+  const onDelete = (e: React.SyntheticEvent, country: any) => {
+    e.stopPropagation();
+    setIsLoading(true);
+    deleteOnTheList(country.cca2);
+  };
+  const onAddList = (e: React.SyntheticEvent, country: any) => {
+    e.stopPropagation();
+    addToList(country);
+  };
   return (
     <>
       <div className="container mt-8 mx-auto px-4 md:px-12">
         <div className="flex flex-wrap -mx-1 lg:-mx-4">
           {props.countries &&
             props.countries.map((country: any) => {
-              function numFormatter(num: number) {
-                if (num >= 1000000000) {
-                  return (num / 1000000000).toFixed(1) + " billion";
-                } else if (num >= 1000000) {
-                  return (num / 1000000).toFixed(1) + " million";
-                } else if (num >= 1000) {
-                  return (num / 1000).toFixed(1) + " thousands";
-                } else if (num < 1000) {
-                  return num.toFixed(1) + " hundred";
-                } else {
-                  return num;
-                }
-              }
+              // function numFormatter(num: number) {
+              //   if (num >= 1000000000) {
+              //     return (num / 1000000000).toFixed(1) + " billion";
+              //   } else if (num >= 1000000) {
+              //     return (num / 1000000).toFixed(1) + " million";
+              //   } else if (num >= 1000) {
+              //     return (num / 1000).toFixed(1) + " thousands";
+              //   } else if (num < 1000) {
+              //     return num.toFixed(1) + " hundred";
+              //   } else {
+              //     return num;
+              //   }
+              // }
               return (
                 <div
                   key={country.name.common}
-                  className="w-full md:w-1/2 lg:w-60 bg-gray-100 dark:bg-gray-700 rounded-xl mr-10 mb-7"
+                  onClick={() => {
+                    props.setSelected(country)
+                    props.setListStep(props.ListViewSteps.SINGLE)}}
+                  className="cursor-pointer w-full md:w-1/2 lg:w-60 bg-gray-100 dark:bg-gray-700 rounded-xl mr-10 mb-7"
                 >
                   <div className="flex flex-col justify-between rounded-xl shadow-lg">
                     <div
@@ -96,7 +140,7 @@ const Index = (props: any) => {
                           }}
                         >
                           <div>
-                            Population: {numFormatter(country.population)}
+                            Population: {formatPopulation(country.population)}
                           </div>
                           <div>Capital : {country.capital}</div>
                           <div>
@@ -116,7 +160,11 @@ const Index = (props: any) => {
                         </div>
                       </div>
                       <div className="flex justify-end m-2.5">
-                        <button className="bg-gray-300 h-10 w-10 rounded-full">
+                        <button
+                          disabled={!foundOnMyList(country.cca2)}
+                          onClick={(e) => onDelete(e, country)}
+                          className="bg-gray-300 h-10 w-10 rounded-full"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -160,7 +208,7 @@ const Index = (props: any) => {
                           </button>
                         ) : (
                           <button
-                            onClick={() => addToList(country)}
+                            onClick={(e) => onAddList(e, country)}
                             className="h-10 w-10 rounded-full ml-5 bg-gray-300"
                           >
                             <svg
@@ -188,6 +236,17 @@ const Index = (props: any) => {
             })}
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };

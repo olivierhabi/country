@@ -26,10 +26,25 @@ export const getAllCountries = async () => {
   }
 };
 
-// export const getAllCountries = async () => {
-//   try {
-//     return await prisma.list.findMany();
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const deleteCountry = async (id: number) => {
+  const IdNumber = Number(id);
+  try {
+    const result = await prisma.list.delete({
+      where: { id: IdNumber },
+    });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getCountryById = async (id: number) => {
+  try {
+    return await prisma.list.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+};

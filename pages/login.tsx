@@ -60,7 +60,7 @@ const Login = (): JSX.Element => {
               }}
             >
               <div className="text-center">
-                <h1 className="text-2xl text-center md:text-3xl font-bold font-roman mb-5">
+                <h1 className="text-2xl text-black text-center md:text-3xl font-bold font-roman mb-5">
                   Login
                 </h1>
               </div>

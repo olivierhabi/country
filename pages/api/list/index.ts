@@ -1,5 +1,5 @@
 import nextConnect from "next-connect";
-import { createListed, getCreatedList } from "../../src/controllers/list";
+import { createListed, getCreatedList } from "../../../src/controllers/list";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = nextConnect()

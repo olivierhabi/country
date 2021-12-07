@@ -20,7 +20,13 @@ interface AuxProps {
   title: string;
 }
 
-const DashboardLayout = ({ children, title }: AuxProps) => {
+const DashboardLayout = ({
+  children,
+  title,
+  ListViewSteps,
+  listStep,
+  setListStep,
+}: any) => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const { theme, setTheme } = useTheme();
 
@@ -38,12 +44,7 @@ const DashboardLayout = ({ children, title }: AuxProps) => {
 
   return (
     <div className="flex flex-row h-full">
-      <div
-        style={{
-          width: "180px",
-        }}
-        className="flex-none bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400"
-      >
+      <div className="flex-none w-[180px] bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400">
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -63,12 +64,7 @@ const DashboardLayout = ({ children, title }: AuxProps) => {
             </defs>
           </svg>
         </div>
-        <div
-          style={{
-            fontSize: "12px",
-          }}
-          className="flex flex-col space-y-5 pt-10 font-book font-extrabold tracking-wide text-black dark:text-white"
-        >
+        <div className="flex flex-col text-[12px] space-y-5 pt-10 font-book font-extrabold tracking-wide text-black dark:text-white">
           <Link href="/" as={`/`}>
             <div className="bg-red-500 cursor-pointer">MY LIST</div>
           </Link>
@@ -82,22 +78,17 @@ const DashboardLayout = ({ children, title }: AuxProps) => {
       </div>
       <div className="bg-white dark:bg-gray-800 flex-grow p-8">
         <div className="flex justify-between items-center h-10">
-          <div
-            className="text-black dark:text-white font-bold font-roman tracking-wide"
-            style={{
-              fontSize: "20px",
-            }}
-          >
-            {title}
-          </div>
+          {listStep === ListViewSteps.LIST && (
+            <div className="text-black text-[20px] dark:text-white font-bold font-roman tracking-wide">
+              {title}
+            </div>
+          )}
+          {listStep !== ListViewSteps.LIST && (
+            <BackButton onClick={() => setListStep(ListViewSteps.LIST)} />
+          )}
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <div
-                className="text-black dark:text-white font-bold font-roman mr-2.5"
-                style={{
-                  fontSize: "14px",
-                }}
-              >
+              <div className="text-black text-[14px] dark:text-white font-bold font-roman mr-2.5">
                 {!enabled ? "LIGHT MODE" : "DARK MODE"}
               </div>
               <Switch
@@ -107,12 +98,7 @@ const DashboardLayout = ({ children, title }: AuxProps) => {
                   setTheme(!enabled ? "light" : "dark");
                 }}
               >
-                <span
-                  className="block bg-white rounded-full border border-black dark:border-white h-4 w-8"
-                  style={{
-                    padding: "2px",
-                  }}
-                >
+                <span className="block p-[2px] bg-white rounded-full border border-black dark:border-white h-[15px] w-7">
                   <span
                     className={`block h-full w-1/2 rounded transition duration-300 ease-in-out transform ${
                       enabled
@@ -162,5 +148,30 @@ const DashboardLayout = ({ children, title }: AuxProps) => {
     </div>
   );
 };
+
+type BackButtonProps = { onClick: () => void };
+function BackButton({ onClick }: BackButtonProps): JSX.Element {
+  return (
+    <button
+      className="text-black text-[20px] dark:text-white font-bold font-roman tracking-wide flex items-center"
+      onClick={onClick}
+    >
+      <svg
+        className="inline"
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="14"
+        fill="none"
+        viewBox="0 0 18 14"
+      >
+        <path
+          fill="#000"
+          d="M7.707 2.374A1 1 0 006.293.96L.96 6.293a.997.997 0 000 1.414l5.333 5.333a1 1 0 101.414-1.414L4.081 8H17a1 1 0 100-2H4.08l3.627-3.626z"
+        ></path>
+      </svg>
+      <p className="inline pl-4">BACK</p>
+    </button>
+  );
+}
 
 export default DashboardLayout;
