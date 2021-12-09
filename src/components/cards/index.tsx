@@ -76,23 +76,10 @@ const Index = (props: any) => {
   };
   return (
     <>
-      <div className="container mt-8 mx-auto px-4 md:px-12">
-        <div className="flex flex-wrap -mx-1 lg:-mx-4">
+      <div className="container mt-8">
+        <div className="flex flex-wrap flex-col md:flex-row items-center mx-10">
           {props.countries &&
             props.countries.map((country: any) => {
-              // function numFormatter(num: number) {
-              //   if (num >= 1000000000) {
-              //     return (num / 1000000000).toFixed(1) + " billion";
-              //   } else if (num >= 1000000) {
-              //     return (num / 1000000).toFixed(1) + " million";
-              //   } else if (num >= 1000) {
-              //     return (num / 1000).toFixed(1) + " thousands";
-              //   } else if (num < 1000) {
-              //     return num.toFixed(1) + " hundred";
-              //   } else {
-              //     return num;
-              //   }
-              // }
               return (
                 <div
                   key={country.name.common}
@@ -100,21 +87,16 @@ const Index = (props: any) => {
                     props.setSelected(country);
                     props.toSingle();
                   }}
-                  className="cursor-pointer w-full md:w-1/2 lg:w-60 bg-gray-100 dark:bg-gray-700 rounded-xl mr-10 mb-7"
+                  className="bg-white md:bg-gray-100 md:mr-10 dark:bg-gray-700 rounded-xl mb-7 w-[370px] sm:w-[400px] md:w-[240px] lg:w-[240px]"
                 >
-                  <div className="flex flex-col justify-between rounded-xl shadow-lg">
-                    <div
-                      style={{
-                        height: "159.75px",
-                      }}
-                      className="relative"
-                    >
+                  <div className="flex flex-col justify-between rounded-xl shadow-lg h-[500px] sm:h-[535px] md:h-[400px]">
+                    <div className="h-[240px] sm:h-[270px] md:h-[159.75px] relative">
                       <Image
                         src={country.flags.png}
                         alt="Picture of the user"
                         layout="fill"
                         objectFit="cover"
-                        className="rounded-xl"
+                        className="rounded-t-sm md:rounded-xl"
                       />
                     </div>
                     <div
@@ -125,18 +107,16 @@ const Index = (props: any) => {
                     >
                       <div className="flex flex-col px-5 pt-5">
                         <div
-                          className="font-roman"
+                          className="text-[20px] sm:text-[25px]  md:text-[18px] font-roman"
                           style={{
-                            fontSize: "18px",
                             fontWeight: "800",
                           }}
                         >
                           {country.name.common}
                         </div>
                         <div
-                          className="flex flex-col space-y-2.5 font-roman pt-5"
+                          className="flex flex-col space-y-2.5 font-roman pt-5 text-[18px] md:text-[14px]"
                           style={{
-                            fontSize: "14px",
                             fontWeight: "500",
                           }}
                         >

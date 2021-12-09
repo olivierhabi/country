@@ -3,12 +3,6 @@ import { render, screen } from "@testing-library/react";
 import Provider from "../../src/contexts/provider";
 import Index from "../../pages/index";
 
-export enum ListViewSteps {
-  LIST,
-  SINGLE,
-}
-
-const UserContext = React.createContext(ListViewSteps.LIST);
 
 describe("Should render the app without crashing", () => {
   it("Renders the Dashboard page", () => {

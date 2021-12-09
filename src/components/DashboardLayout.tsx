@@ -9,9 +9,6 @@ import { useTheme } from "next-themes";
 import { Switch } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, Transition } from "@headlessui/react";
-import { InputSearch } from "../components/commons/InputSearch";
-import { Validations } from "../components/utils/formValidation";
 import { FormSearch } from "../types";
 import { useForm } from "react-hook-form";
 
@@ -41,8 +38,8 @@ const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
     setTheme("light");
   }, []);
   return (
-    <div className="flex flex-row h-full">
-      <div className="flex-none w-[180px] bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400">
+    <div className="flex flex-row h-[100vh]">
+      <div className="flex-none hidden md:block w-[180px] bg-white dark:bg-gray-800 p-8 border-r border-light-blue-500 dark:border-gray-400">
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -74,16 +71,90 @@ const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
           </Link>
         </div>
       </div>
-      <div className="bg-white dark:bg-gray-800 flex-grow p-8">
-        <div className="flex justify-between items-center h-10">
+      <div className="bg-white dark:bg-gray-800 flex-grow md:p-8">
+        <div className="md:hidden">
+          <div className="flex justify-between items-center px-8 h-[100px] drop-shadow-md bg-white dark:text-white dark:bg-gray-800">
+            <div
+              className="font-roman text-[18px] sm:text-[22px]"
+              style={{
+                fontWeight: "900",
+              }}
+            >
+              Where in the world?
+            </div>
+            <div className="flex items-center">
+              <Switch
+                checked={enabled}
+                onChange={() => {
+                  setEnabled(!enabled);
+                  setTheme(!enabled ? "light" : "dark");
+                }}
+              >
+                {!enabled ? (
+                  <div className="flex flex-row">
+                    <div
+                      onClick={() => {
+                        setEnabled(!enabled);
+                        setTheme(!enabled ? "light" : "dark");
+                      }}
+                      className="mb-1"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 inline"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                        />
+                      </svg>
+                    </div>
+
+                    <div className="inline font-roman text-[18px] sm:text-[22px] pl-2">
+                      Light Mode
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-row">
+                    <div className="mb-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 inline"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                        />
+                      </svg>
+                    </div>
+
+                    <div className="inline font-roman text-[18px] sm:text-[22px] pl-2">
+                      Dark Mode
+                    </div>
+                  </div>
+                )}
+              </Switch>
+            </div>
+          </div>
+          {/* <div>BODY</div> */}
+        </div>
+        <div className="md:flex justify-between items-center h-10 hidden">
           {state === ListViewSteps.LIST && (
             <div className="text-black text-[20px] dark:text-white font-bold font-roman tracking-wide">
               {title}
             </div>
           )}
-          {state !== ListViewSteps.LIST && (
-            <BackButton onClick={toList} />
-          )}
+          {state !== ListViewSteps.LIST && <BackButton onClick={toList} />}
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
               <div className="text-black text-[14px] dark:text-white font-bold font-roman mr-2.5">
@@ -141,7 +212,7 @@ const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
             </div>
           </div>
         </div>
-        <div className="">{children}</div>
+        <div className="bg-[#fafafa] md:bg-white">{children}</div>
       </div>
     </div>
   );

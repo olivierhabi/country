@@ -59,7 +59,7 @@ const options = {
       return token;
     },
     redirect: async (url: any, baseUrl: any) => {
-      return Promise.resolve(url);
+      return await Promise.resolve(url);
     },
   },
 };
@@ -68,5 +68,5 @@ export default async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  NextAuth(req, res, options);
+  await NextAuth(req, res, options);
 };

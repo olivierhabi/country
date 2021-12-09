@@ -24,6 +24,6 @@ function reducer(state: number, action: ActionType) {
 }
 
 export default function StoreProvider(props: any) {
-  const [state, dispatch] = useReducer(reducer, ListViewSteps.LIST);
+  const [state, dispatch] = useReducer(reducer, ListViewSteps.SINGLE);
   return <Provider value={[state, dispatch]}>{props.children}</Provider>;
 }
