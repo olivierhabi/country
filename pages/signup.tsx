@@ -174,15 +174,6 @@ const Signup = (): JSX.Element => {
                       <ErrorMessage message={errors.birthdate?.message || ""} />
                     </div>
                   </div>
-                  {/* <div>
-                    <Input
-                      label="Email"
-                      type="email"
-                      placeholder="Your email address"
-                      {...register("emailAddress", Validations.emailAddress)}
-                      errorText={errors.emailAddress?.message}
-                    />
-                  </div> */}
                   <div className="mt-4">
                     <Input
                       label="Password"
