@@ -78,19 +78,3 @@ model List {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
-
-model Visited {
-  id        Int      @id @default(autoincrement())
-  country   Json
-  userEmail String?
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-}
-
-model ToVisit {
-  id        Int      @id @default(autoincrement())
-  country   Json
-  userEmail String?
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-}
