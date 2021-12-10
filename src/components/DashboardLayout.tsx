@@ -61,7 +61,7 @@ const DashboardLayout = ({ children, title, state, toSingle, session, toList }: 
         </div>
         <div className="flex flex-col text-[12px] space-y-5 pt-10 font-book font-extrabold tracking-wide text-black dark:text-white">
           <Link href="/" as={`/`}>
-            <div className="bg-red-500 cursor-pointer">MY LIST</div>
+            <div className="cursor-pointer">MY LIST</div>
           </Link>
           <Link href="/visited" as={`/visited`}>
             <div className="cursor-pointer">VISITED</div>

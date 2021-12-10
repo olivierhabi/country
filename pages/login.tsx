@@ -39,10 +39,9 @@ const Login = (): JSX.Element => {
       }).then((response: SignInResponse | SetStateAction<any>) => {
         setResponse(response.error);
         setIsLoading(false);
-        router.push("/");
-        // if (response.url) {
-        //   router.push(response.url);
-        // }
+        if (response.url) {
+          router.push(response.url);
+        }
       });
     } catch (error) {
       console.log(error);
