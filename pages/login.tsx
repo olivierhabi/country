@@ -9,7 +9,7 @@ import { Input } from "../src/components/commons/Input";
 import { ErrorMessage } from "../src/components/commons/ErrorMessage";
 
 import { Validations } from "../src/components/utils/formValidation";
-import { SignInResponse,SetStateAction, FormValues } from "../src/types";
+import { SignInResponse, SetStateAction, FormValues } from "../src/types";
 
 const Login = (): JSX.Element => {
   const router = useRouter();
