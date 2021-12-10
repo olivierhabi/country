@@ -17,6 +17,10 @@ model User {
   emailVerified DateTime? @map(name: "email_verified")
   image         String?
   password      String?
+  firstName     String?
+  lastName      String?
+  birthdate     String?
+  country       String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 
@@ -69,6 +73,8 @@ model VerificationRequest {
 model List {
   id        Int      @id @default(autoincrement())
   country   Json
+  userEmail String?
+  status    String?
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 }

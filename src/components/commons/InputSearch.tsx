@@ -16,11 +16,11 @@ const InputSearch = React.forwardRef<
     <>
       {label && (
         <>
-          <div className="relative rounded-xl">
+          <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="fill-current text-black dark:text-white h-6 w-6"
+                className="fill-current md:text-black text-gray-400 dark:text-white h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -33,14 +33,12 @@ const InputSearch = React.forwardRef<
             </div>
             <input
               style={{
-                height: "50px",
                 fontSize: "18px",
               }}
-              className={`shadow-sm pl-14 font-roman text-black dark:text-white bg-gray-100 dark:bg-gray-600 block w-full sm:text-sm rounded-xl focus:outline-none placeholder-black dark:placeholder-white ${clsx(
+              className={`h-[65px] md:h-[50px] md:bg-gray-100 shadow-sm pl-14 font-roman text-black dark:text-white bg-white dark:bg-gray-600 block w-full sm:text-sm rounded md:rounded-lg focus:outline-none placeholder-gray-400 md:placeholder-black dark:placeholder-white ${clsx(
                 "border-gray-200",
                 errorText && "border-red-500"
               )}`}
-              //  className="pl-14 font-roman text-black dark:text-white bg-gray-100 dark:bg-gray-600 block w-full sm:text-sm rounded-xl focus:outline-none placeholder-black dark:placeholder-white"
               ref={ref}
               placeholder={placeholder}
               type={type}

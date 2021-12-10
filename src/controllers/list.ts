@@ -31,9 +31,11 @@ export const getCreatedList = async (
   res: NextApiResponse
 ) => {
   try {
-    const countries = (await getAllCountries()) as Array<
-      null[] | string[] | any
-    >;
+    const { type } = req.query;
+    const countries = (await getAllCountries(
+      type as string | undefined
+    )) as Array<null[] | string[] | any>;
+
     const myList: Array<string> = [];
     if (countries.length !== 0) {
       for (var i = 0; i < countries.length; i++) {

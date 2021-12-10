@@ -4,7 +4,6 @@ import { NewUser, UserData, NewUserResponse } from "../types/index";
 export interface Welcome {
   country: Country;
   user: string;
-  status: string;
 }
 
 export interface Country {}
@@ -15,7 +14,6 @@ export const createList = async (props: Welcome) => {
       data: {
         country: props.country,
         userEmail: props.user,
-        status: props.status,
       },
       select: {
         id: true,
@@ -28,15 +26,9 @@ export const createList = async (props: Welcome) => {
   }
 };
 
-export const getAllCountries = async (type: string | undefined) => {
+export const getAllCountries = async () => {
   try {
-    return await prisma.list.findMany({
-      where: {
-        status: {
-          contains: type,
-        },
-      },
-    });
+    return await prisma.list.findMany();
   } catch (error) {
     throw error;
   }

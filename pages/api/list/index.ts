@@ -7,8 +7,7 @@ const handler = nextConnect()
     await createListed(req, res);
   })
   .get(async (req: NextApiRequest, res: NextApiResponse) => {
-    await getCreatedList(req, res)
-    res.status(200).json({ data: "This is data" });
+    await getCreatedList(req, res);
   });
 
 export default handler;

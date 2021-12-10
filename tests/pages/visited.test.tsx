@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import Provider from "../../src/contexts/provider";
-import Index from "../../pages/index";
+import Visited from "../../pages/visited";
 import { Sessions } from "../../src/types";
 
 import "@testing-library/jest-dom";
@@ -17,11 +17,11 @@ describe("Should render the app without crashing", () => {
     };
     render(
       <Provider>
-        <Index {...mockSession} />
+        <Visited {...mockSession} />
       </Provider>
     );
     expect(
-      screen.getByRole("button", { name: "Filter by region" })
+      screen.getByText("MY LIST")
     ).toBeInTheDocument();
   });
 });

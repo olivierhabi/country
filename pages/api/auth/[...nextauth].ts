@@ -31,7 +31,7 @@ const options = {
           throw new Error("Invalid email or password!");
         }
         if (user) {
-          return { id: user.id, email: user.email };
+          return { id: user.id, email: user.email , name: user.firstName  };
         } else {
           return null;
         }
@@ -59,7 +59,7 @@ const options = {
       return token;
     },
     redirect: async (url: any, baseUrl: any) => {
-      return Promise.resolve(url);
+      return await Promise.resolve(url);
     },
   },
 };
@@ -68,5 +68,5 @@ export default async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  NextAuth(req, res, options);
+  await NextAuth(req, res, options);
 };

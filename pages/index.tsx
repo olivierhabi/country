@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import Cards from "../src/components/cards/index";
 import { InputSearch } from "../src/components/commons/InputSearch";
 import { Validations } from "../src/components/utils/formValidation";
-import { FormSearch } from "../src/types";
+import { FormSearch, Session , Sessions} from "../src/types";
 import DashboardLayout from "../src/components/DashboardLayout";
 import SingleCountry from "../src/components/SingleCountry";
 import { useStore } from "../src/contexts/hooks";
@@ -37,7 +37,7 @@ export enum ListViewSteps {
   SINGLE,
 }
 
-const Home = (): JSX.Element | null => {
+const Home = (props: Sessions | null): JSX.Element | null => {
   const router = useRouter();
   const [state, dispatch] = useStore();
   const [enabled, setEnabled] = useState<boolean>(true);
@@ -48,7 +48,6 @@ const Home = (): JSX.Element | null => {
   const [loading, setLoading] = useState<any>(false);
   const { theme, setTheme } = useTheme();
   const [selected, setSelected] = useState();
- 
 
   const {
     register,
@@ -59,7 +58,7 @@ const Home = (): JSX.Element | null => {
   } = useForm<FormSearch>();
 
   const listData = async () => {
-    const myList = await fetch(`/api/list`, {
+    const myList = await fetch(`/api/list?type=list`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -133,18 +132,18 @@ const Home = (): JSX.Element | null => {
       type: TOLIST,
     });
   }
-
   return (
     <>
       <DashboardLayout
         state={state}
+        session={props}
         toSingle={toSingle}
         toList={toList}
         title={"MY LIST"}
       >
         {state === ListViewSteps.LIST && (
-          <div className="flex flex-row justify-between mt-7 w-full">
-            <div className="w-[400px]">
+          <div className="flex flex-col md:flex-row justify-between pt-7 w-full min-w-[500px]">
+            <div className="md:w-[400px] mx-11 h-[50px] mb-7">
               <form onSubmit={handleSubmit(searchInput)}>
                 <InputSearch
                   label={"Search here"}
@@ -155,10 +154,10 @@ const Home = (): JSX.Element | null => {
                 />
               </form>
             </div>
-            <div className="z-10">
+            <div className="z-10 mx-11">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className=" w-[200px] h-[50px] text-[18px] inline-flex justify-center items-center px-4 py-2 font-roman bg-gray-100 dark:bg-gray-600 text-black dark:text-white rounded-xl  focus:outline-none focus-visible:ring-2">
+                  <Menu.Button className="w-[200px] h-[65px] md:h-[50px] bg-white md:bg-gray-100 text-[18px] inline-flex justify-center items-center px-4 py-2 font-roman dark:bg-gray-600 text-black dark:text-white rounded md:rounded-lg  focus:outline-none focus-visible:ring-2 shadow-sm">
                     Filter by region
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +184,7 @@ const Home = (): JSX.Element | null => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute w-[200px] right-0 mt-2 origin-top-right bg-gray-100 dark:bg-gray-600 divide-y divide-gray-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="absolute w-[200px] right-0 mt-2 origin-top-right md:bg-gray-100 bg-white dark:bg-gray-600 divide-y divide-gray-100 rounded md:rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="flex flex-col text-[18px] space-y-2 py-5 px-4 font-roman">
                       <Menu.Item>
                         {({ active }) => (
@@ -269,6 +268,7 @@ const Home = (): JSX.Element | null => {
               toSingle={toSingle}
               toList={toList}
               setSelected={setSelected}
+              session={props}
             />
           )}
           {state === ListViewSteps.SINGLE && (
