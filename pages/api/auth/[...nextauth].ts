@@ -31,7 +31,7 @@ const options = {
           throw new Error("Invalid email or password!");
         }
         if (user) {
-          return { id: user.id, email: user.email };
+          return { id: user.id, email: user.email , name: user.firstName  };
         } else {
           return null;
         }

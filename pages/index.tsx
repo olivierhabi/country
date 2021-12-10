@@ -9,35 +9,35 @@ import { useForm } from "react-hook-form";
 import Cards from "../src/components/cards/index";
 import { InputSearch } from "../src/components/commons/InputSearch";
 import { Validations } from "../src/components/utils/formValidation";
-import { FormSearch } from "../src/types";
+import { FormSearch, Session , Sessions} from "../src/types";
 import DashboardLayout from "../src/components/DashboardLayout";
 import SingleCountry from "../src/components/SingleCountry";
 import { useStore } from "../src/contexts/hooks";
 import { TOSINGLE, TOLIST } from "../src/contexts/constants";
 
-// export async function getServerSideProps(context: any) {
-//   const { req } = context;
-//   const session = await getSession({ req });
+export async function getServerSideProps(context: any) {
+  const { req } = context;
+  const session = await getSession({ req });
 
-//   if (!session) {
-//     return {
-//       redirect: { destination: "/login" },
-//     };
-//   }
+  if (!session) {
+    return {
+      redirect: { destination: "/login" },
+    };
+  }
 
-//   return {
-//     props: {
-//       session,
-//     },
-//   };
-// }
+  return {
+    props: {
+      session,
+    },
+  };
+}
 
 export enum ListViewSteps {
   LIST,
   SINGLE,
 }
 
-const Home = (): JSX.Element | null => {
+const Home = (props: Sessions | null): JSX.Element | null => {
   const router = useRouter();
   const [state, dispatch] = useStore();
   const [enabled, setEnabled] = useState<boolean>(true);
@@ -47,201 +47,7 @@ const Home = (): JSX.Element | null => {
   const [cca2list, setCca2list] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const { theme, setTheme } = useTheme();
-  const [selected, setSelected] = useState({
-    name: {
-      common: "DR Congo",
-      official: "Democratic Republic of the Congo",
-      nativeName: {
-        fra: {
-          official: "République démocratique du Congo",
-          common: "RD Congo",
-        },
-        kon: {
-          official: "Repubilika ya Kongo Demokratiki",
-          common: "Repubilika ya Kongo Demokratiki",
-        },
-        lin: {
-          official: "Republiki ya Kongó Demokratiki",
-          common: "Republiki ya Kongó Demokratiki",
-        },
-        lua: {
-          official: "Ditunga dia Kongu wa Mungalaata",
-          common: "Ditunga dia Kongu wa Mungalaata",
-        },
-        swa: {
-          official: "Jamhuri ya Kidemokrasia ya Kongo",
-          common: "Jamhuri ya Kidemokrasia ya Kongo",
-        },
-      },
-    },
-    tld: [".cd"],
-    cca2: "CD",
-    ccn3: "180",
-    cca3: "COD",
-    cioc: "COD",
-    independent: true,
-    status: "officially-assigned",
-    unMember: true,
-    currencies: {
-      CDF: {
-        name: "Congolese franc",
-        symbol: "FC",
-      },
-    },
-    idd: {
-      root: "+2",
-      suffixes: ["43"],
-    },
-    capital: ["Kinshasa"],
-    altSpellings: [
-      "CD",
-      "DR Congo",
-      "Congo-Kinshasa",
-      "Congo, the Democratic Republic of the",
-      "DRC",
-    ],
-    region: "Africa",
-    subregion: "Middle Africa",
-    languages: {
-      fra: "French",
-      kon: "Kikongo",
-      lin: "Lingala",
-      lua: "Tshiluba",
-      swa: "Swahili",
-    },
-    translations: {
-      ara: {
-        official: "جمهورية الكونغو الديمقراطية",
-        common: "الكونغو",
-      },
-      ces: {
-        official: "Demokratická republika Kongo",
-        common: "DR Kongo",
-      },
-      cym: {
-        official: "Gweriniaeth Ddemocrataidd Congo",
-        common: "Gweriniaeth Ddemocrataidd Congo",
-      },
-      deu: {
-        official: "Demokratische Republik Kongo",
-        common: "Kongo (Dem. Rep.)",
-      },
-      est: {
-        official: "Kongo Demokraatlik Vabariik",
-        common: "Kongo DV",
-      },
-      fin: {
-        official: "Kongon demokraattinen tasavalta",
-        common: "Kongon demokraattinen tasavalta",
-      },
-      fra: {
-        official: "République démocratique du Congo",
-        common: "Congo (Rép. dém.)",
-      },
-      hrv: {
-        official: "Demokratska Republika Kongo",
-        common: "Kongo, Demokratska Republika",
-      },
-      hun: {
-        official: "Kongói Demokratikus Köztársaság",
-        common: "Kongói Demokratikus Köztársaság",
-      },
-      ita: {
-        official: "Repubblica Democratica del Congo",
-        common: "Congo (Rep. Dem.)",
-      },
-      jpn: {
-        official: "コンゴ民主共和国",
-        common: "コンゴ民主共和国",
-      },
-      kor: {
-        official: "콩고 민주 공화국",
-        common: "콩고 민주 공화국",
-      },
-      nld: {
-        official: "Democratische Republiek Congo",
-        common: "Congo (DRC)",
-      },
-      per: {
-        official: "جمهوری دموکراتیک کنگو",
-        common: "کنگو دموکراتیک",
-      },
-      pol: {
-        official: "Demokratyczna Republika Konga",
-        common: "Demokratyczna Republika Konga",
-      },
-      por: {
-        official: "República Democrática do Congo",
-        common: "República Democrática do Congo",
-      },
-      rus: {
-        official: "Демократическая Республика Конго",
-        common: "Демократическая Республика Конго",
-      },
-      slk: {
-        official: "Konžská demokratická republika",
-        common: "Kongo",
-      },
-      spa: {
-        official: "República Democrática del Congo",
-        common: "Congo (Rep. Dem.)",
-      },
-      swe: {
-        official: "Demokratiska republiken Kongo",
-        common: "Kongo-Kinshasa",
-      },
-      urd: {
-        official: "جمہوری جمہوریہ کانگو",
-        common: "کانگو",
-      },
-      zho: {
-        official: "刚果民主共和国",
-        common: "民主刚果",
-      },
-    },
-    latlng: [0, 25],
-    landlocked: false,
-    borders: ["AGO", "BDI", "CAF", "COG", "RWA", "SSD", "TZA", "UGA", "ZMB"],
-    area: 2344858,
-    demonyms: {
-      eng: {
-        f: "Congolese",
-        m: "Congolese",
-      },
-      fra: {
-        f: "Congolaise",
-        m: "Congolais",
-      },
-    },
-    flag: "🇨🇩",
-    maps: {
-      googleMaps: "https://goo.gl/maps/KfhNVn6VqdZXWu8n9",
-      openStreetMaps: "https://www.openstreetmap.org/relation/192795",
-    },
-    population: 89561404,
-    gini: {
-      "2012": 42.1,
-    },
-    fifa: "COD",
-    car: {
-      signs: ["CGO"],
-      side: "right",
-    },
-    timezones: ["UTC+01:00", "UTC+02:00"],
-    continents: ["Africa"],
-    flags: {
-      png: "https://flagcdn.com/w320/cd.png",
-      svg: "https://flagcdn.com/cd.svg",
-    },
-    coatOfArms: {
-      png: "https://mainfacts.com/media/images/coats_of_arms/cd.png",
-      svg: "https://mainfacts.com/media/images/coats_of_arms/cd.svg",
-    },
-    startOfWeek: "monday",
-    capitalInfo: {
-      latlng: [-4.32, 15.3],
-    },
-  });
+  const [selected, setSelected] = useState();
 
   const {
     register,
@@ -252,7 +58,7 @@ const Home = (): JSX.Element | null => {
   } = useForm<FormSearch>();
 
   const listData = async () => {
-    const myList = await fetch(`/api/list`, {
+    const myList = await fetch(`/api/list?type=list`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -326,11 +132,11 @@ const Home = (): JSX.Element | null => {
       type: TOLIST,
     });
   }
-
   return (
     <>
       <DashboardLayout
         state={state}
+        session={props}
         toSingle={toSingle}
         toList={toList}
         title={"MY LIST"}
@@ -462,10 +268,11 @@ const Home = (): JSX.Element | null => {
               toSingle={toSingle}
               toList={toList}
               setSelected={setSelected}
+              session={props}
             />
           )}
           {state === ListViewSteps.SINGLE && (
-            <SingleCountry selected={selected}/>
+            <SingleCountry selected={selected} />
           )}
         </>
       </DashboardLayout>

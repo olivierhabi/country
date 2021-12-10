@@ -1,10 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import LoadingSkeleton from "./LoadingSkeleton";
 import { ToastContainer, toast } from "react-toastify";
 import formatPopulation from "../../helpers/formatPopulation";
+import { route } from "next/dist/server/router";
 
 const Index = (props: any) => {
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   if (props.loading && props.countries && props.countries.length === 0) {
@@ -25,7 +29,18 @@ const Index = (props: any) => {
   const addToList = async (country: Array<string>) => {
     const res = await fetch(`/api/list`, {
       method: "POST",
-      body: JSON.stringify(country),
+      body: JSON.stringify({
+        country,
+        user: props.session.session.user.email,
+        status:
+          router.route === "/"
+            ? "list"
+            : router.route === "/to-visit"
+            ? "tovisit"
+            : router.route === "/visited"
+            ? "visited"
+            : null,
+      }),
       headers: {
         "Content-Type": "application/json",
       },

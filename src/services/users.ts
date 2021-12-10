@@ -14,6 +14,10 @@ export const getUserByMail = async (
         email: true,
         password: true,
         emailVerified: true,
+        country: true,
+        birthdate: true,
+        firstName: true,
+        lastName: true,
       },
     });
     if (user) {
@@ -30,6 +34,10 @@ export const createNewUser = async (newUser: NewUser<NewUserResponse>) => {
       data: {
         email: newUser.email,
         password: newUser.hashedPassword,
+        country: newUser.country,
+        birthdate: newUser.birthdate,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
       },
       select: {
         id: true,

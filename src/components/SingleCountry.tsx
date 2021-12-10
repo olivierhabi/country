@@ -2,14 +2,15 @@ import Image from "next/image";
 import formatPopulation from "../helpers/formatPopulation";
 import { useStore } from "../contexts/hooks";
 import { TOSINGLE, TOLIST } from "../contexts/constants";
+import { useRouter } from "next/router";
 
 export enum ListViewSteps {
   LIST,
   SINGLE,
 }
 
-
-const SingleCountry = ({ selected }: any): JSX.Element => {
+const SingleCountry = ({ selected }: any): JSX.Element | null => {
+  const router = useRouter();
   const [state, dispatch] = useStore();
 
   function toList() {
@@ -17,20 +18,27 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
       type: TOLIST,
     });
   }
+
+  if (!selected) {
+    toList();
+    router.push(router.route);
+    return null;
+  }
   return (
     <div className="flex flex-col">
       <div className="w-full mt-[60px] mb-7 px-8 md:hidden">
         <button
           onClick={toList}
-          className="text-black px-[44px] py-[12px] text-[20px] bg-white drop-shadow-lg dark:text-white font-bold font-roman tracking-wide flex items-center"
+          className="text-black px-[44px] py-[12px] text-[20px] bg-white dark:bg-gray-600 drop-shadow-lg dark:text-white font-bold font-roman tracking-wide flex items-center"
         >
           <svg
-            className="inline"
+            className="inline text-black dark:text-white"
             xmlns="http://www.w3.org/2000/svg"
             width="18"
             height="14"
             fill="none"
             viewBox="0 0 18 14"
+            stroke="currentColor"
           >
             <path
               fill="#000"
@@ -62,7 +70,7 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                       <div className="font-roman inline font-bold">
                         Native Name:
                       </div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {
                           selected.name.nativeName[
                             Object.keys(selected.name.nativeName)[0]
@@ -74,13 +82,13 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                       <div className="font-roman inline font-bold">
                         Population:
                       </div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {formatPopulation(selected.population)}
                       </div>
                     </div>
                     <div className="">
                       <div className="font-roman inline font-bold">Region:</div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {selected.region}
                       </div>
                     </div>
@@ -88,7 +96,7 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                       <div className="font-roman inline font-bold">
                         Sub Region:
                       </div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {selected.subregion}
                       </div>
                     </div>
@@ -96,7 +104,7 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                       <div className="font-roman inline font-bold">
                         Capital:
                       </div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {selected.capital}
                       </div>
                     </div>
@@ -106,7 +114,7 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                       <div className="font-roman inline font-bold">
                         Top Level Domain:
                       </div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {selected.tld &&
                           selected.tld.map((domain: string) => {
                             return <>{domain}</>;
@@ -117,7 +125,7 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                       <div className="font-roman inline font-bold">
                         Currencies:
                       </div>
-                      <div className="inline pl-2 text-gray-600 font-roman">
+                      <div className="inline pl-2 text-gray-600 dark:text-white font-roman">
                         {selected.languages &&
                           Object.keys(selected.languages).map(
                             (value, index) => {
@@ -138,14 +146,12 @@ const SingleCountry = ({ selected }: any): JSX.Element => {
                 <div className="font-roman inline text-[25px] font-bold pb-[20px]">
                   Border Countries:
                 </div>
-                <div
-                  className="flex flex-wrap md:flex-row items-center mx-10 lg:mx-[0px] w-[500px]"
-                >
+                <div className="flex flex-wrap md:flex-row items-center mx-10 lg:mx-[0px] w-[500px]">
                   {selected.borders &&
                     selected.borders.map((country: string) => {
                       return (
                         <div className=" lg:text-[14px] mr-[20px] pb-[15px]">
-                          <button className="px-[50px] py-[5px] font-bold font-roman mx-auto bg-white border-[3px] border-gray-300 shadow-sm hover:bg-yellow-default focus:outline-none">
+                          <button className="px-[50px] py-[5px] font-bold font-roman mx-auto bg-white dark:bg-gray-800 border-[3px] border-gray-300 shadow-sm hover:bg-yellow-default focus:outline-none">
                             {country}
                           </button>
                         </div>

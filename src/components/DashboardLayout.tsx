@@ -22,7 +22,7 @@ export enum ListViewSteps {
   SINGLE,
 }
 
-const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
+const DashboardLayout = ({ children, title, state, toSingle, session, toList }: any) => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const { theme, setTheme } = useTheme();
 
@@ -146,7 +146,6 @@ const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
               </Switch>
             </div>
           </div>
-          {/* <div>BODY</div> */}
         </div>
         <div className="md:flex justify-between items-center h-10 hidden">
           {state === ListViewSteps.LIST && (
@@ -198,7 +197,7 @@ const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
             <div className="flex items-center pl-11">
               <div className="text-black dark:text-white font-bold font-roman">
                 <p className="text-gray-400 dark:text-gray-200 inline">Hey,</p>{" "}
-                Jane
+                {session.session.user.name}
               </div>
               <div className="h-10 w-10 border-2 border-black dark:border-gray-400 rounded-full relative ml-5">
                 <Image
@@ -212,7 +211,7 @@ const DashboardLayout = ({ children, title, state, toSingle, toList }: any) => {
             </div>
           </div>
         </div>
-        <div className="bg-[#fafafa] md:bg-white">{children}</div>
+        <div className="bg-[#fafafa] md:bg-white dark:bg-gray-800">{children}</div>
       </div>
     </div>
   );
@@ -226,7 +225,7 @@ function BackButton({ onClick }: BackButtonProps): JSX.Element {
       onClick={onClick}
     >
       <svg
-        className="inline"
+        className="inline text-black dark:text-white"
         xmlns="http://www.w3.org/2000/svg"
         width="18"
         height="14"

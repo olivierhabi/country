@@ -8,7 +8,10 @@ export const signupUser = async (
   res: NextApiResponse<ResponseUser | ResponseError>
 ) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, country, firstName, lastName, birthdate } =
+      req.body;
+
+      console.log(email, password, country, firstName, lastName, birthdate, "==================================")
     const search = (await getUserByMail(email)) as UserData;
     if (search) {
       return res.status(403).json({
@@ -17,7 +20,7 @@ export const signupUser = async (
       });
     }
     const hashedPassword = (await bcryptjs.hashSync(password, 10)) as string;
-    const user = (await createNewUser({ email, hashedPassword })) as User;
+    const user = (await createNewUser({ email, hashedPassword, country, firstName, lastName, birthdate })) as User;
     return res.status(201).json({
       status: "success",
       message: "Signed up successfully",
