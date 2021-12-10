@@ -9,7 +9,7 @@ import { Input } from "../src/components/commons/Input";
 import { ErrorMessage } from "../src/components/commons/ErrorMessage";
 
 import { Validations } from "../src/components/utils/formValidation";
-import { SignInResponse,SetStateAction, FormValues } from "../src/types";
+import { SignInResponse, SetStateAction, FormValues } from "../src/types";
 
 const Login = (): JSX.Element => {
   const router = useRouter();
@@ -39,9 +39,10 @@ const Login = (): JSX.Element => {
       }).then((response: SignInResponse | SetStateAction<any>) => {
         setResponse(response.error);
         setIsLoading(false);
-        if (response.url) {
-          router.push(response.url);
-        }
+        router.push(response.url);
+        // if (response.url) {
+        //   router.push(response.url);
+        // }
       });
     } catch (error) {
       console.log(error);
